@@ -43,8 +43,6 @@ class _QuizPageState extends State<QuizPage> {
   //   true,
   // ];
 
-  int questionIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -57,7 +55,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                quizBrain.getQuestionText(questionIndex),
+                quizBrain.getQuestionText(quizBrain.getQuestionIndex()),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -85,13 +83,15 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked true.
                 setState(() {
-                  if(quizBrain.getQuestionAnswer(questionIndex)) {
+                  if(quizBrain.getQuestionAnswer(quizBrain.getQuestionIndex())) {
                     scoreKeeper.add(
                         Icon(
                           Icons.check,
                           color: Colors.green,
                         )
                     );
+
+                    quizBrain.removeQuestion(quizBrain.getQuestionIndex());
                   } else {
                     scoreKeeper.add(
                         Icon(
@@ -102,7 +102,7 @@ class _QuizPageState extends State<QuizPage> {
                   }
 
                 });
-                questionIndex = Random().nextInt(quizBrain.getQuestionsLength());
+                quizBrain.setQuestionIndex(Random().nextInt(quizBrain.getQuestionsLength()));
               },
             ),
           ),
@@ -124,13 +124,15 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked false.
                 setState(() {
-                  if(!quizBrain.getQuestionAnswer(questionIndex)) {
+                  if(!quizBrain.getQuestionAnswer(quizBrain.getQuestionIndex())) {
                     scoreKeeper.add(
                         Icon(
                           Icons.check,
                           color: Colors.green,
                         )
                     );
+
+                    quizBrain.removeQuestion(quizBrain.getQuestionIndex());
                   } else {
                     scoreKeeper.add(
                         Icon(
@@ -140,7 +142,7 @@ class _QuizPageState extends State<QuizPage> {
                     );
                   }
                 });
-                questionIndex = Random().nextInt(quizBrain.getQuestionsLength());
+                quizBrain.setQuestionIndex(Random().nextInt(quizBrain.getQuestionsLength()));
               },
             ),
           ),
