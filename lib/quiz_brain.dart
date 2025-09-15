@@ -1,6 +1,19 @@
 import 'question.dart';
 
 class QuizBrain {
+
+  // List<String> questions = <String>[
+  //   'You can lead a cow down stairs but not up stairs.',
+  //   'Approximately one quarter of human bones are in the feet.',
+  //   'A slug\'s blood is green.'
+  // ];
+  //
+  // List<bool> answers = <bool>[
+  //   false,
+  //   true,
+  //   true,
+  // ];
+
   // Underscore in dart is the equivalent of private in java
   int _questionIndex = 0;
 
@@ -32,12 +45,12 @@ class QuizBrain {
         true),
   ];
 
-  String getQuestionText(int questionNum) {
-    return _questions[questionNum].questionText;
+  String getQuestionText() {
+    return _questions[_questionIndex].questionText;
   }
 
-  bool getQuestionAnswer(int questionNum) {
-    return _questions[questionNum].questionAnswer;
+  bool getQuestionAnswer() {
+    return _questions[_questionIndex].questionAnswer;
   }
 
   int getQuestionsLength() {
@@ -52,7 +65,7 @@ class QuizBrain {
     _questionIndex = newIndex;
   }
 
-  void removeQuestion(int questionNum) {
-    _questions.removeAt(questionNum);
+  void removeQuestion() {
+    _questions.removeAt(_questionIndex);
   }
 }
