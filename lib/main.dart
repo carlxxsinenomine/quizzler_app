@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import 'package:quizzler_app/question.dart';
 import 'package:quizzler_app/quiz_brain.dart';
+
 void main() => runApp(Quizzler());
+QuizBrain quizBrain = QuizBrain();
 
 class Quizzler extends StatelessWidget {
   @override
@@ -28,7 +29,6 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  QuizBrain quizBrain = QuizBrain();
   List<Icon> scoreKeeper = <Icon>[];
 
   // List<String> questions = <String>[
@@ -57,7 +57,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                quizBrain.questions[questionIndex].questionText,
+                quizBrain.getQuestionText(questionIndex),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -85,7 +85,7 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked true.
                 setState(() {
-                  if(quizBrain.questions[questionIndex].questionAnswer) {
+                  if(quizBrain.getQuestionAnswer(questionIndex)) {
                     scoreKeeper.add(
                         Icon(
                           Icons.check,
@@ -102,7 +102,7 @@ class _QuizPageState extends State<QuizPage> {
                   }
 
                 });
-                questionIndex = Random().nextInt(quizBrain.questions.length);
+                questionIndex = Random().nextInt(quizBrain.getQuestionsLength());
               },
             ),
           ),
@@ -124,7 +124,7 @@ class _QuizPageState extends State<QuizPage> {
               onPressed: () {
                 //The user picked false.
                 setState(() {
-                  if(!quizBrain.questions[questionIndex].questionAnswer) {
+                  if(!quizBrain.getQuestionAnswer(questionIndex)) {
                     scoreKeeper.add(
                         Icon(
                           Icons.check,
@@ -140,12 +140,11 @@ class _QuizPageState extends State<QuizPage> {
                     );
                   }
                 });
-                questionIndex = Random().nextInt(quizBrain.questions.length);
+                questionIndex = Random().nextInt(quizBrain.getQuestionsLength());
               },
             ),
           ),
         ),
-        //TODO: Add a Row here as your score keeper
         Row(
           children: scoreKeeper,
         ),
