@@ -1,10 +1,16 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:math';
 
 import 'package:quizzler_app/quiz_brain.dart';
 
 void main() => runApp(Quizzler());
 QuizBrain quizBrain = QuizBrain();
+// Get screen dimension
+FlutterView view = WidgetsBinding.instance.platformDispatcher.views.first;
+Size size = view.physicalSize/ view.devicePixelRatio;
 
 class Quizzler extends StatelessWidget {
   @override
@@ -33,12 +39,6 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Get screen dimension
-    Size size = MediaQuery.of(context).size;
-    if (isMaxScreenWidth(size)) {
-      print("Max na");
-    }
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -120,7 +120,8 @@ class _QuizPageState extends State<QuizPage> {
               color: Colors.green,
             )
         );
-        quizBrain.removeQuestion();
+
+        quizBrain.incrementCorrectGuess();
       } else {
         scoreKeeper.add(
             Icon(
@@ -129,11 +130,21 @@ class _QuizPageState extends State<QuizPage> {
             )
         );
       }
+
+      if (isMaxScreenWidth()) { // if icons are over screen width in DPI then end game.
+        showAlert(quizBrain.getCorrectGuessCount());
+        resetFields();
+      }
     });
     quizBrain.setQuestionIndex(Random().nextInt(quizBrain.getQuestionsLength()));
   }
 
-  bool isMaxScreenWidth(Size size) {
+  void resetFields() {
+    scoreKeeper.clear();
+    quizBrain.resetFields();
+  }
+
+  bool isMaxScreenWidth() {
     double width = size.width;
     double iconHorizonalPixelMax = width / 24;
     int myDouble = iconHorizonalPixelMax.round() - 1;
@@ -142,5 +153,9 @@ class _QuizPageState extends State<QuizPage> {
       return true;
     }
     return false;
+  }
+
+  void showAlert(int correctGuessCount) {
+    Alert(context: context, title: "Max Guess Reached", desc: "Correct Guesses: $correctGuessCount.").show();
   }
 }

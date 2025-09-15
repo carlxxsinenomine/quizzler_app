@@ -17,6 +17,7 @@ class QuizBrain {
   // Underscore in dart is the equivalent of private in java
   int _questionIndex = 0;
   int _questionCount = 0;
+  int _correctGuess = 0;
 
   final List<Question> _questions = <Question>[
     Question('Some cats are actually allergic to humans', true),
@@ -66,15 +67,25 @@ class QuizBrain {
     _questionIndex = newIndex;
   }
 
-  void removeQuestion() {
-    _questions.removeAt(_questionIndex);
-  }
-
   void incrementQuestionCount() {
     _questionCount++;
   }
 
+  void incrementCorrectGuess() {
+    _correctGuess++;
+  }
+
+  int getCorrectGuessCount() {
+    return _correctGuess;
+  }
+
   int getQuestionCount() {
     return _questionCount;
+  }
+
+  void resetFields() {
+    _questionIndex = 0;
+    _correctGuess = 0;
+    _questionCount = 0;
   }
 }
