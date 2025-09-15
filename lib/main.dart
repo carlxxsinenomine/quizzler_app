@@ -33,6 +33,12 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen dimension
+    Size size = MediaQuery.of(context).size;
+    if (isMaxScreenWidth(size)) {
+      print("Max na");
+    }
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -70,27 +76,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked true.
-                setState(() {
-                  if(quizBrain.getQuestionAnswer()) {
-                    scoreKeeper.add(
-                        Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                    );
-
-                    quizBrain.removeQuestion();
-                  } else {
-                    scoreKeeper.add(
-                        Icon(
-                          Icons.close,
-                          color: Colors.red,
-                        )
-                    );
-                  }
-
-                });
-                quizBrain.setQuestionIndex(Random().nextInt(quizBrain.getQuestionsLength()));
+                checkAnswer(true);
               },
             ),
           ),
@@ -111,26 +97,7 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 //The user picked false.
-                setState(() {
-                  if(!quizBrain.getQuestionAnswer()) {
-                    scoreKeeper.add(
-                        Icon(
-                          Icons.check,
-                          color: Colors.green,
-                        )
-                    );
-
-                    quizBrain.removeQuestion();
-                  } else {
-                    scoreKeeper.add(
-                        Icon(
-                          Icons.close,
-                          color: Colors.red,
-                        )
-                    );
-                  }
-                });
-                quizBrain.setQuestionIndex(Random().nextInt(quizBrain.getQuestionsLength()));
+                checkAnswer(false);
               },
             ),
           ),
@@ -140,5 +107,40 @@ class _QuizPageState extends State<QuizPage> {
         ),
       ],
     );
+  }
+
+  void checkAnswer(bool userPicked) {
+    setState(() {
+      quizBrain.incrementQuestionCount();
+
+      if(quizBrain.getQuestionAnswer() == userPicked) {
+        scoreKeeper.add(
+            Icon(
+              Icons.check,
+              color: Colors.green,
+            )
+        );
+        quizBrain.removeQuestion();
+      } else {
+        scoreKeeper.add(
+            Icon(
+              Icons.close,
+              color: Colors.red,
+            )
+        );
+      }
+    });
+    quizBrain.setQuestionIndex(Random().nextInt(quizBrain.getQuestionsLength()));
+  }
+
+  bool isMaxScreenWidth(Size size) {
+    double width = size.width;
+    double iconHorizonalPixelMax = width / 24;
+    int myDouble = iconHorizonalPixelMax.round() - 1;
+
+    if (quizBrain.getQuestionCount() >= myDouble) {
+      return true;
+    }
+    return false;
   }
 }
